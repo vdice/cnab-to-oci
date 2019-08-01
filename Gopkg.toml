@@ -30,7 +30,9 @@
 
 [[constraint]]
   name = "github.com/deislabs/cnab-go"
-  version = "v0.2.0-beta.1"
+# TODO: before merge, set to latest release
+#  version = "v0.2.0-beta.1"
+  revision = "44f18fa40b9ce9acd04c73373b9991a7e5b5a9d5"
 
 # Use master while we wait for https://github.com/containerd/containerd/pull/3218 to be included in the release
 [[constraint]]
