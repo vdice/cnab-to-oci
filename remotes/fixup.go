@@ -14,6 +14,7 @@ import (
 	"github.com/containerd/containerd/remotes"
 	"github.com/docker/distribution/reference"
 	ocischemav1 "github.com/opencontainers/image-spec/specs-go/v1"
+	"github.com/pkg/errors"
 )
 
 // FixupBundle checks that all the references are present in the referenced repository, otherwise it will mount all
@@ -214,14 +215,14 @@ func fixupBaseImage(ctx context.Context, name string, baseImage *bundle.BaseImag
 	for _, f := range fixups {
 		info, pushed, ok, err := f(ctx, targetRepoOnly, baseImage, cfg)
 		if err != nil {
-			log.G(ctx).Debug(err)
+			return imageFixupInfo{}, false, errors.Wrapf(err, "failed to resolve or push image %q", baseImage.Image)
 		}
 		if ok {
 			return info, pushed, nil
 		}
 	}
 
-	return imageFixupInfo{}, false, fmt.Errorf("failed to resolve or push image for service %q", name)
+	return imageFixupInfo{}, false, errors.Wrapf(err, "failed to resolve or push image for service %q", name)
 }
 
 func pushByDigest(ctx context.Context, target reference.Named, baseImage *bundle.BaseImage, cfg fixupConfig) (imageFixupInfo, bool, bool, error) {
